@@ -1,15 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { ios } from '@/components/ui/ios'
 import { formatearPrecio, mensajeWAComprobante, generarCodigoReferencia } from '@/lib/utils'
 import type { EventoProfesor, Evento, Profesor } from '@/types'
 
-interface Props { params: { slug: string } }
-
 type Paso = 'form' | 'exito'
 
-export default function InscripcionPage({ params }: Props) {
+export default function InscripcionPage() {
+  const params = useParams<{ slug: string }>()
   const [ep, setEp] = useState<(EventoProfesor & { profesor: Profesor; evento: Evento }) | null>(null)
   const [cargando, setCargando] = useState(true)
   const [paso, setPaso] = useState<Paso>('form')

@@ -1,17 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { ios } from '@/components/ui/ios'
 import type { Asistente, Evento, EventoProfesor, Profesor } from '@/types'
-
-interface Props { params: { token: string } }
 
 type TicketData = Asistente & {
   evento: Evento
   evento_profesor?: EventoProfesor & { profesor?: Profesor }
 }
 
-export default function TicketPage({ params }: Props) {
+export default function TicketPage() {
+  const params = useParams<{ token: string }>()
   const [ticket, setTicket] = useState<TicketData | null>(null)
   const [qrUrl, setQrUrl] = useState('')
   const [cargando, setCargando] = useState(true)
