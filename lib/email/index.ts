@@ -1,7 +1,16 @@
 import { Resend } from 'resend'
 import { Asistente, Evento } from '@/types'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend() {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY no está configurada')
+    }
+    _resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 
 interface EnviarTicketParams {
   asistente: Asistente
@@ -17,7 +26,7 @@ export async function enviarTicketPorEmail({
   const ticketUrl = `${process.env.NEXT_PUBLIC_APP_URL}/ticket/${asistente.qr_token}`
   const qrBase64 = qrDataURL.replace('data:image/png;base64,', '')
 
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await getResend().emails.send({
     from: process.env.EMAIL_FROM!,
     to: asistente.email,
     subject: `🎟 Tu entrada para ${evento.nombre}`,
@@ -37,7 +46,7 @@ export async function enviarTicketPorEmail({
             <p style="color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 6px;">Entrada confirmada</p>
             <h1 style="color:white;font-size:26px;font-weight:700;margin:0;letter-spacing:-0.3px;">${evento.nombre}</h1>
             <p style="color:rgba(255,255,255,0.75);font-size:14px;margin:8px 0 0;">
-              ${new Date(evento.fecha).toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' })} · ${new Date(evento.fecha).toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' })} hs
+              ${new Date(evento.fecha).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} · ${new Date(evento.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })} hs
             </p>
           </div>
 
@@ -78,7 +87,7 @@ export async function enviarTicketPorEmail({
         content: qrBase64,
         content_id: 'qr-code',
       },
-    ],
+    ] as any,
   })
 
   if (error) throw new Error(`Error enviando email: ${error.message}`)

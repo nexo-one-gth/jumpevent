@@ -12,7 +12,7 @@ control de asistencia con QR y acceso a contenido post-evento.
 
 | Capa | Tecnología | Notas |
 |---|---|---|
-| Frontend + Backend | Next.js 14 App Router + TypeScript | Vercel free tier |
+| Frontend + Backend | Next.js 16 App Router + TypeScript | Vercel free tier |
 | Base de datos | Supabase (PostgreSQL) | Free tier |
 | Auth admin | Supabase Auth | Solo la organizadora |
 | Email | Resend | Free: 3.000/mes |

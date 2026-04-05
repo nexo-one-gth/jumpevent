@@ -55,27 +55,4 @@ export function formatearFecha(fecha: string): string {
   })
 }
 
-// ── Mensaje WhatsApp para comprobante de transferencia ───────
-export function mensajeWAComprobante(
-  nombre: string,
-  referencia: string,
-  precio: number
-): string {
-  return encodeURIComponent(
-    `Hola! Realicé la transferencia para el evento Jumping Master Class.\n\n` +
-    `Nombre: ${nombre}\n` +
-    `Código de referencia: ${referencia}\n` +
-    `Monto: ${formatearPrecio(precio)}\n\n` +
-    `Adjunto el comprobante 👇`
-  )
-}
 
-// ── Mensaje WhatsApp para enviar link de ticket ───────────────
-export function mensajeWATicket(nombre: string, token: string): string {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/ticket/${token}`
-  return encodeURIComponent(
-    `Hola ${nombre.split(' ')[0]}! ✅ Tu pago fue confirmado.\n\n` +
-    `Tu entrada para Jumping Master Class:\n${url}\n\n` +
-    `Guardá el link — vas a necesitar el QR para entrar al evento 🎟`
-  )
-}

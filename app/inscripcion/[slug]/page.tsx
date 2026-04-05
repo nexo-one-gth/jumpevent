@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { ios } from '@/components/ui/ios'
-import { formatearPrecio, mensajeWAComprobante, generarCodigoReferencia } from '@/lib/utils'
+import { formatearPrecio, generarCodigoReferencia } from '@/lib/utils'
+import { textoComprobantWA } from '@/lib/whatsapp'
 import type { EventoProfesor, Evento, Profesor } from '@/types'
 
 type Paso = 'form' | 'exito'
@@ -229,7 +230,7 @@ export default function InscripcionPage() {
 
             {form.metodo === 'Transferencia' && respuesta?.evento && (
               <a
-                href={`https://wa.me/${evento.wa_comprobantes}?text=${mensajeWAComprobante(form.nombre, respuesta.asistente?.codigo_referencia ?? '', evento.precio, evento.alias_transferencia)}`}
+                href={`https://wa.me/${evento.wa_comprobantes}?text=${encodeURIComponent(textoComprobantWA(form.nombre, respuesta.asistente?.codigo_referencia ?? '', evento.precio, evento.alias_transferencia))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#25D366', color: 'white', textDecoration: 'none', borderRadius: 14, padding: 14, fontSize: 16, fontWeight: 600, fontFamily: ios.font, marginBottom: 12 }}
