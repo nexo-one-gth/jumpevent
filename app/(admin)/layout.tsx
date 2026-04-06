@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import { ios } from '@/components/ui/ios'
+import { Toaster } from 'react-hot-toast'
 
 const TABS = [
   {
@@ -64,6 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div style={{ minHeight: '100vh', background: ios.bg, display: 'flex', flexDirection: 'column', maxWidth: 480, margin: '0 auto', position: 'relative' }}>
+      <Toaster position="top-center" />
       {/* Contenido principal */}
       <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 80 }}>
         {children}

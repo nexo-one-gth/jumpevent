@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ios, NavBar, Group, Cell, IOSSwitch, BottomSheet, InputField, BtnPrimario } from '@/components/ui/ios'
 import { formatearPrecio } from '@/lib/utils'
 import type { Evento } from '@/types'
+import toast from 'react-hot-toast'
 
 type CampoEditable = 'nombre' | 'fecha' | 'lugar' | 'precio' | 'alias_transferencia' | 'min_alumnos_gratis' | 'wa_comprobantes' | 'link_fotos' | 'link_video' | 'link_tracks'
 
@@ -70,10 +71,16 @@ export default function EventoPage() {
     const supabase = createClient()
     const esNumerico = CAMPOS_NUMERICOS.includes(campoEditando)
     const valorGuardar = esNumerico ? Number(valorEdicion) : (valorEdicion.trim() || null)
-    await supabase.from('eventos').update({ [campoEditando]: valorGuardar }).eq('id', evento.id)
+    const { error } = await supabase.from('eventos').update({ [campoEditando]: valorGuardar }).eq('id', evento.id)
+    if (error) {
+      toast.error(`Error: ${error.message}`)
+      setGuardando(false)
+      return
+    }
     setEvento({ ...evento, [campoEditando]: valorGuardar })
     setCampoEditando(null)
     setGuardando(false)
+    toast.success('Guardado')
   }
 
   async function toggleContenido() {
@@ -122,7 +129,7 @@ export default function EventoPage() {
   async function crearEvento() {
     setCreando(true)
     const supabase = createClient()
-    const { data } = await supabase.from('eventos').insert({
+    const { data, error } = await supabase.from('eventos').insert({
       nombre: formCrear.nombre,
       fecha: formCrear.fecha,
       lugar: formCrear.lugar,
@@ -133,9 +140,15 @@ export default function EventoPage() {
       activo: true,
       contenido_activo: false,
     }).select().single()
+    if (error) {
+      toast.error(`Error: ${error.message}`)
+      setCreando(false)
+      return
+    }
     if (data) {
       setEvento(data)
       setSheetCrear(false)
+      toast.success('Evento creado')
     }
     setCreando(false)
   }
